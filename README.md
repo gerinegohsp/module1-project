@@ -26,6 +26,26 @@ helping talent acquisition teams make evidence-based hiring decisions.
 **Success criteria:** a TA user can answer *"what salary should we offer for
 role X?"* in under one minute using the dashboard.
 
+### Key Business Questions
+
+Each question maps to specific columns and one dashboard view:
+
+| # | Business question | Key columns | Chart / view |
+|---|---|---|---|
+| Q1 | What salary should we offer for role X? | `title`, `categories`, `positionLevels`, salary columns | Box plot by level/industry + median/P25/P75 metric cards, with filters |
+| Q2 | Which roles are hard to fill? ⭐ | `metadata_repostCount`, `metadata_totalNumberJobApplication` ÷ `numberOfVacancies` | Scatter plot (X = repost count, Y = applications per vacancy) — bottom-right quadrant = hard-to-fill |
+| Q3 | Which roles/industries have the most demand? | parsed `categories`, `numberOfVacancies` | Horizontal bar: Top 10 industries by vacancies; bar by position level |
+| Q4 | Where can we hire selectively? | same as Q2 | Same scatter, top-left quadrant (low repost, high applications) |
+| Q5 | When should we post jobs? | `metadata_originalPostingDate` (monthly) | Line chart: postings & avg applications over time (from May 2023; earlier months are sparse) |
+| Q6 | Agency vs direct employer? *(bonus)* | `metadata_isPostedOnBehalf` | Global filter toggle across all views |
+
+Common sidebar filters: industry, position level, employment type, date
+range, posted-on-behalf. The derived metric *applications per vacancy*
+(Q2/Q4) is computed at the EDA stage.
+
+Q1 + Q3 satisfy the pass requirement (one overview + one drill-down);
+Q2 is our differentiator.
+
 ### Dataset
 
 - **Source:** Singapore job postings (MyCareersFuture), provided by instructor
@@ -145,4 +165,4 @@ conda activate pds        # or: conda create -n pds python=3.10 pandas matplotli
 ## 7. Tools
 
 Python 3.10 · Pandas · Matplotlib / Seaborn · Jupyter (VS Code) ·
-Git & GitHub · *Dashboard framework: TBC (e.g. Streamlit)*
+Git & GitHub · Streamlit (dashboard)
