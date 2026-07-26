@@ -1,43 +1,148 @@
-# 📚 Lesson 1.5: SQL Advanced
+# SG Jobs Analytics — Talent Acquisition Insights Dashboard
 
-**Theme:** From Tables to Intelligence — joining, ranking, and structuring complex queries
+**NTU SCTP Data Science & AI (Cohort 6) — Module 1 Assignment Project**
 
----
-
-## 📅 Lesson Overview
-
-| Section | Duration | Topic / Activity |
-|---------|----------|-----------------|
-| **Part 1: Joins & Unions** | 55 min | INNER, LEFT, RIGHT, FULL JOIN; UNION; multi-table reporting |
-| **Part 2: Window Functions** | 55 min | Running totals; RANK(); QUALIFY; row-level analytics |
-| **Part 3: Subqueries & CTEs** | 55 min | Nested queries; IN/EXISTS; Derived tables; Common Table Expressions |
+A data product built on 1M+ real Singapore job postings from MyCareersFuture,
+helping talent acquisition teams make evidence-based hiring decisions.
 
 ---
 
-## 🎯 Learning Outcomes
+## 1. Project Overview
 
-By the end of this lesson, you will be able to:
+### Business Case
 
-1. **Execute** INNER, LEFT, RIGHT, and FULL OUTER JOINs to combine data across multiple tables.
-2. **Apply** Window Functions (`SUM OVER`, `RANK OVER`) to compute running totals and rankings without losing row-level detail.
-3. **Write** Subqueries using `IN`, `EXISTS`, and derived tables to filter results based on aggregated logic.
-4. **Structure** complex analytical queries using Common Table Expressions (CTEs) for readability and reuse.
+- **Business scenario:** A talent acquisition (TA) team at a mid-sized
+  Singapore company planning its hiring strategy for the year ahead.
+- **Objective:** Help the TA team decide **which roles to prioritise, what
+  salary ranges to offer, and when to post jobs** — by revealing market
+  demand, salary benchmarks, and competition levels across roles and
+  industries.
+- **Target users & value:** TA specialists and hiring managers. Instead of
+  guessing salary bands or posting jobs blindly, they can benchmark against
+  1M+ real MyCareersFuture postings — e.g. spotting roles where postings
+  attract very few applications (hard-to-fill, needs stronger offers) vs.
+  roles flooded with applicants (competitive market, can hire selectively).
+
+**Success criteria:** a TA user can answer *"what salary should we offer for
+role X?"* in under one minute using the dashboard.
+
+### Dataset
+
+- **Source:** Singapore job postings (MyCareersFuture), provided by instructor
+- **Size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
+- **Period covered:** Oct 2022 – May 2024
+- **Note:** The raw CSV is **not** included in this repo (exceeds GitHub's
+  100 MB limit) and its download link is **intentionally not published**
+  here since this repo is public. Cohort members: get the dataset from the
+  instructor's pinned message in the course Discord (ds6-lesson-prep) and
+  place it in the project root as `SGJobData.csv`. A cleaned, compressed
+  version (`SGJobData_cleaned.csv.gz`) is included in this repo and is
+  sufficient for the EDA and dashboard stages.
 
 ---
 
-## 📂 Course Materials
+## 2. Learning Outcomes
 
-| Material | Description | Est. Time |
-|----------|-------------|-----------|
-| [Pre-Class](./pre-class.md) | Metadata queries, JOIN types, DbGate setup | 30–45 min |
-| [Lesson Plan](./lesson.md) | Instructor guide for the 3-hour hands-on session | 3 hours |
-| [Assignment](./assignment.md) | Insurance Auditor — multi-table analysis challenge | 45–60 min |
-| [Reference](./reference.md) | Advanced SQL cheat sheet — JOINs, window functions, CTEs | As needed |
+Through this project, our team applies and consolidates the full Module 1
+skill chain:
+
+1. **Data loading at scale** — sampling strategies (`nrows`), memory-aware
+   loading of a 1M+ row CSV with Pandas.
+2. **Data cleaning & quality judgement** — identifying and justifying
+   decisions on missing values, outlier salaries, and malformed fields.
+3. **Feature engineering** — deriving business-meaningful features such as
+   salary bands, seniority groups, industry categories (parsed from JSON),
+   and demand/competition metrics.
+4. **Exploratory Data Analysis (EDA)** — using descriptive statistics and
+   visualisation (Matplotlib/Seaborn) to surface patterns that shape the
+   dashboard design.
+5. **Data storytelling** — framing findings as answers to a business
+   question, not just charts.
+6. **Dashboard development** — building an interactive, filterable data
+   product for a specific user group.
+7. **Collaboration with Git/GitHub** — branch/PR workflow, individual commit
+   history, and code review as a team of five.
 
 ---
 
-## 🛠️ Tools & Setup
+## 3. Team
 
-- **[DuckDB](https://duckdb.org):** In-process analytical database engine.
-- **[DbGate](https://dbgate.org):** Free, cross-platform database manager.
-- **Dataset:** `unit-1-5.db` — SafeDrive Insurance (clients, cars, claims, addresses). Download link in [pre-class.md](./pre-class.md).
+| # | Member | GitHub | Primary Responsibility |
+|---|---|---|---|
+| 1 | Jenny Hwo | [@jennyhwo85-lgtm](https://github.com/jennyhwo85-lgtm) | Repo setup, README (business case & scope), initial EDA on sample |
+| 2 | Wong Lai Yoke | [@laiyokew6996](https://github.com/laiyokew6996) | `db/` folder setup & dataset handling (via PR) |
+| 3 | Quxin | [@quxin43](https://github.com/quxin43) | Data cleaning (missing values, outliers) & conversion to `.db`/`.sql` |
+| 4 | Wei Xiang (小翔) | [@boyboi86](https://github.com/boyboi86) | Full EDA & feature engineering on cleaned data |
+| 5 | Gerine Goh | [@gerinegohsp](https://github.com/gerinegohsp) | Streamlit dashboard & visualisation |
+
+> Workflow: each member works on their own branch and submits at least one
+> Pull Request, since commit history is assessed individually.
+>
+> **Note on the dataset:** the raw CSV (~286 MB) exceeds GitHub's 100 MB
+> file limit and is git-ignored. A **cleaned, compressed** dataset
+> (`SGJobData_cleaned.csv.gz`) is versioned in the repo instead; see
+> Section 1 for how to obtain the raw CSV.
+
+---
+
+## 4. Project Structure
+
+```
+module1-project/
+├── README.md                  ← you are here
+├── .gitignore                 ← excludes the large raw CSV
+├── explore.ipynb              ← Week 1: initial EDA on 50k sample (Jenny)
+├── clean_db.ipynb             ← data cleaning notebook (Quxin)
+├── SGJobData_cleaned.csv.gz   ← cleaned, compressed dataset (Quxin)
+├── db/                        ← folder for database outputs (Wong Lai Yoke)
+├── app/                       ← (planned) Streamlit dashboard code (Gerine)
+└── report/                    ← (planned) written report, Sections 1–4 (team)
+```
+
+---
+
+## 5. Milestones & Progress
+
+| Week | Target (per assignment brief) | Status |
+|---|---|---|
+| Week 1 | Business case chosen + data loaded (sample first) + first EDA | ✅ Done |
+| Week 2 | Cleaning + feature engineering + key charts drafted | 🔄 In progress — cleaning done (`clean_db.ipynb`), full EDA & charts next |
+| Week 3 | Dashboard assembled + story polished + presentation rehearsed | ⏳ Planned |
+
+### Week 1 EDA highlights
+
+- `occupationId` is 100% null → will be dropped.
+- Salary outliers found (min $1, max $205,000/month vs. median $3,750) →
+  a justified filter range will be applied during cleaning.
+- `categories` is stored as a JSON string (multi-label) → needs parsing
+  before industry-level analysis.
+- Early months (Oct 2022 – Feb 2023) are sparse; volume stabilises from
+  ~May 2023 → time-trend views will note this.
+
+---
+
+## 6. Setup & How to Run
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/jennyhwo85-lgtm/module1-project.git
+cd module1-project
+
+# 2. Environment (conda, Python 3.10)
+conda activate pds        # or: conda create -n pds python=3.10 pandas matplotlib seaborn jupyter
+
+# 3. Place the dataset (from instructor's link) in the project root
+#    as SGJobData.csv — it is git-ignored on purpose.
+
+# 4. Open and run the notebook
+#    (VS Code: open explore.ipynb and select the 'pds' kernel)
+```
+
+*Dashboard run instructions will be added once the app is built (Week 3).*
+
+---
+
+## 7. Tools
+
+Python 3.10 · Pandas · Matplotlib / Seaborn · Jupyter (VS Code) ·
+Git & GitHub · *Dashboard framework: TBC (e.g. Streamlit)*
