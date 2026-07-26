@@ -93,7 +93,7 @@ skill chain:
 | 2 | Wong Lai Yoke | [@laiyokew6996](https://github.com/laiyokew6996) | `db/` folder setup & dataset handling (via PR) |
 | 3 | Quxin | [@quxin43](https://github.com/quxin43) | Data cleaning (missing values, outliers) & conversion to `.db`/`.sql` |
 | 4 | Wei Xiang (小翔) | [@boyboi86](https://github.com/boyboi86) | Full EDA & feature engineering on cleaned data |
-| 5 | Gerine Goh | [@gerinegohsp](https://github.com/gerinegohsp) | Streamlit dashboard & visualisation |
+| 5 | Gerine Goh Sipei| [@gerinegohsp](https://github.com/gerinegohsp) | Streamlit dashboard & visualisation |
 
 > Workflow: each member works on their own branch and submits at least one
 > Pull Request, since commit history is assessed individually.
