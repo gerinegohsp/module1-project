@@ -5,6 +5,9 @@
 A data product built on 1M+ real Singapore job postings from MyCareersFuture,
 helping talent acquisition teams make evidence-based hiring decisions.
 
+**Original assignment repository:**  
+[https://github.com/su-ntu-ctp/6m-data-C1.2-coaching-assignment-project](https://github.com/su-ntu-ctp/6m-data-C1.2-coaching-assignment-project)
+
 ---
 
 ## 1. Project Overview
@@ -173,3 +176,5 @@ conda activate pds        # or: conda create -n pds python=3.10 pandas matplotli
 
 Python 3.10 · Pandas · Matplotlib / Seaborn · Jupyter (VS Code) ·
 Git & GitHub · Streamlit (dashboard)
+
+
