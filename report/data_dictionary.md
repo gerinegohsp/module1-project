@@ -122,6 +122,7 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `numberOfVacancies` | None | INTEGER |
 | `salary_minimum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
 | `salary_maximum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
+| `average_salary` | validated in explore.ipynb | INTEGER |
 | `metadata_totalNumberJobApplication` | Fill nulls with 0 | INTEGER |
 | `metadata_totalNumberOfView` | Fill nulls with 0 | INTEGER |
 | `metadata_repostCount` | Fill nulls with 0 | INTEGER |
@@ -129,7 +130,7 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `metadata_originalPostingDate` | Convert to datetime; drop invalid dates | DATETIME |
 | `metadata_newPostingDate` | Convert to datetime; drop invalid dates | DATETIME |
 | `metadata_expiryDate` | Convert to datetime; drop invalid dates | DATETIME |
-| `status_jobStatus` | Keep as-is (Open/Closed/Filled) | TEXT |
+| `minimumYearsExperience` | None | INTEGER |
 
 ### Derived Features Added
 
@@ -161,6 +162,7 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `occupationId` | 100% null values; no business value |
 | `status_id` | Redundant with `status_jobStatus` | 
 | `salary_type` | Redundant given only 1 unique value `monthly` | 
+| `status_jobStatus` | Redundant only `Re-open` or `Closed` | 
 | `categories` | Replaced by parsed `industry_list` and `industry_primary` |
 
 ---
