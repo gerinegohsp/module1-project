@@ -57,7 +57,7 @@ This document defines the final database schema for `SGJobData.db`, which serves
 | `metadata_jobPostId` | TEXT | Unique job posting identifier | Primary key candidate |
 | `postedCompany_name` | TEXT | Company name | For company-level analysis |
 | `status_id` | INTEGER | Job status identifier code | Redundant with `status_jobStatus` |
-| `status_jobStatus` | TEXT | Job status | Values: Open, Closed, Filled |
+| `status_jobStatus` | TEXT | Job status | Values: Open, Closed |
 | `occupationId` | INTEGER | Occupation classification ID | **100% null** - no usable data |
 
 ---
@@ -160,8 +160,8 @@ These derived features are calculated during data preparation and stored in `SGJ
 | Column | Reason |
 |--------|--------|
 | `occupationId` | 100% null values; no business value |
-| `status_id` | Redundant with `status_jobStatus` |
-| `average_salary` | Inconsistent calculation; recalculated from min/max |
+| `status_id` | Redundant with `status_jobStatus` | 
+| `salary_type` | Redundant given only 1 unique value `monthly` | 
 | `categories` | Replaced by parsed `industry_list` and `industry_primary` |
 
 ---
