@@ -120,7 +120,7 @@ module1-project/
 ├── notebooks/
 │   ├── explore.ipynb               ← Jenny's 50k EDA (reference)
 │   ├── clean_db.ipynb              ← Quxin's cleaning (reference/ require update)
-│   └── full_eda.ipynb           ← YOUR new full EDA (Wei Xiang)
+│   └── full_eda.ipynb           ← new full EDA (Wei Xiang)
 ├── app/                       ← (planned) Streamlit dashboard code (Gerine)
 └── report/                    ← written report, Sections 1–4 (team)
 
