@@ -5,6 +5,9 @@
 A data product built on 1M+ real Singapore job postings from MyCareersFuture,
 helping talent acquisition teams make evidence-based hiring decisions.
 
+**Original assignment repository:**  
+[https://github.com/su-ntu-ctp/6m-data-C1.2-coaching-assignment-project](https://github.com/su-ntu-ctp/6m-data-C1.2-coaching-assignment-project)
+
 ---
 
 ## 1. Project Overview
@@ -93,7 +96,7 @@ skill chain:
 | 2 | Wong Lai Yoke | [@laiyokew6996](https://github.com/laiyokew6996) | `db/` folder setup & dataset handling (via PR) |
 | 3 | Quxin | [@quxin43](https://github.com/quxin43) | Data cleaning (missing values, outliers) & conversion to `.db`/`.sql` |
 | 4 | Wei Xiang (小翔) | [@boyboi86](https://github.com/boyboi86) | Full EDA & feature engineering on cleaned data |
-| 5 | Gerine Goh Sipei | [@gerinegohsp](https://github.com/gerinegohsp) | Streamlit dashboard & visualisation |
+| 5 | Gerine Goh Sipei| [@gerinegohsp](https://github.com/gerinegohsp) | Streamlit dashboard & visualisation |
 
 > Workflow: each member works on their own branch and submits at least one
 > Pull Request, since commit history is assessed individually.
@@ -108,15 +111,22 @@ skill chain:
 ## 4. Project Structure
 
 ```
+
 module1-project/
-├── README.md                  ← you are here
-├── .gitignore                 ← excludes the large raw CSV
-├── explore.ipynb              ← Week 1: initial EDA on 50k sample (Jenny)
-├── clean_db.ipynb             ← data cleaning notebook (Quxin)
-├── SGJobData_cleaned.csv.gz   ← cleaned, compressed dataset (Quxin)
-├── db/                        ← folder for database outputs (Wong Lai Yoke)
+├── .gitignore
+├── README.md
+├── environment.yml
+├── requirements.txt
+├── db/
+│   └── SGJobData.csv               ← Raw data (included in .gitignore)
+|   └── SGJobData_cleaned.csv.gz        ← cleaned, compressed dataset (Quxin) (will be replaced)
+├── notebooks/
+│   ├── explore.ipynb               ← Jenny's 50k EDA (reference)
+│   ├── clean_db.ipynb              ← Quxin's cleaning (reference/ require update)
+│   └── full_eda.ipynb           ← new full EDA (Wei Xiang)
 ├── app/                       ← (planned) Streamlit dashboard code (Gerine)
-└── report/                    ← (planned) written report, Sections 1–4 (team)
+└── report/                    ← written report, Sections 1–4 (team)
+
 ```
 
 ---
@@ -166,3 +176,5 @@ conda activate pds        # or: conda create -n pds python=3.10 pandas matplotli
 
 Python 3.10 · Pandas · Matplotlib / Seaborn · Jupyter (VS Code) ·
 Git & GitHub · Streamlit (dashboard)
+
+
