@@ -122,6 +122,10 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `numberOfVacancies` | None | INTEGER |
 | `salary_minimum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
 | `salary_maximum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
+| `metadata_totalNumberJobApplication` | Fill nulls with 0 | INTEGER |
+| `metadata_totalNumberOfView` | Fill nulls with 0 | INTEGER |
+| `metadata_repostCount` | Fill nulls with 0 | INTEGER |
+| `metadata_isPostedOnBehalf` | Fill nulls with False | BOOLEAN |
 | `salary_type` | None. Only "Monthly" in this column | TEXT |
 | `metadata_totalNumberJobApplication` | None. No missing value after dropping single row | INTEGER |
 | `metadata_totalNumberOfView` | None. No missing value after dropping single row | INTEGER |
