@@ -12,7 +12,7 @@ This document defines the final database schema for `SGJobData.db`, which serves
 
 ---
 
-## 1. Original CSV Columns
+## 1. Original CSV Columns (22 columns)
 
 ### Job Posting Information
 
@@ -23,6 +23,7 @@ This document defines the final database schema for `SGJobData.db`, which serves
 | `positionLevels` | TEXT | Seniority level | Values: Fresh/entry level, Non-executive, Junior Executive, Executive, Senior Executive, Professional, Manager,  Middle Management, Senior Management |
 | `employmentTypes` | TEXT | Employment type | Values: Permanent, Full Time, Part Time, Contract, Temporary, Internship/Attachment, Freelance, Flexi-work |
 | `numberOfVacancies` | INTEGER | Number of positions available | Used for demand calculation |
+| `minimumYearsExperience` | INTEGER | Working experience requirement | May correlated to salary |
 
 ### Salary Information
 
@@ -62,7 +63,7 @@ This document defines the final database schema for `SGJobData.db`, which serves
 
 ---
 
-## 2. New Features in Database
+## 2. New Features in Database (15 columns)
 
 These derived features are calculated during data preparation and stored in `SGJobData.db` to support business questions.
 
@@ -110,34 +111,30 @@ These derived features are calculated during data preparation and stored in `SGJ
 
 ## 3. Columns to Keep (After Cleaning)
 
-### Raw Columns Retained in Database
+### Raw Columns Retained in Database (17 columns)
 
 | Column | Cleaning Required | Final Type |
 |--------|-------------------|------------|
-| `metadata_jobPostId` | None | TEXT (PK) |
-| `title` | None | TEXT |
+| `metadata_jobPostId` | None; No missing value after dropping single row | TEXT (PK) |
+| `title` | None. No missing value after dropping single row | TEXT |
 | `postedCompany_name` | None. No missing value after dropping single row | TEXT |
-| `positionLevels` | None. Already standardized | TEXT |
-| `employmentTypes` | None. Already standardized | TEXT |
+| `positionLevels` | None. Already standardized. No missing value after dropping single row | TEXT |
+| `employmentTypes` | None. Already standardized. No missing value after dropping single row | TEXT |
 | `numberOfVacancies` | None | INTEGER |
+| `minimumYearsExperience` | None | INTEGER |
 | `salary_minimum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
 | `salary_maximum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
 | `average_salary` | validated in explore.ipynb | INTEGER |
-| `minimumYearsExperience` | None. | INTEGER |
-| `metadata_totalNumberJobApplication` | Fill nulls with 0 | INTEGER |
-| `metadata_totalNumberOfView` | Fill nulls with 0 | INTEGER |
-| `metadata_repostCount` | Fill nulls with 0 | INTEGER |
-| `metadata_isPostedOnBehalf` | Fill nulls with False | BOOLEAN |
-| `metadata_totalNumberJobApplication` | None. No missing value after dropping single row | INTEGER |
-| `metadata_totalNumberOfView` | None. No missing value after dropping single row | INTEGER |
-| `metadata_repostCount` | None. No missing value after dropping single row | INTEGER |
-| `metadata_isPostedOnBehalf` | None. No missing value after dropping single row | BOOLEAN |
-| `metadata_originalPostingDate` | Convert to datetime; drop invalid dates | DATETIME |
-| `metadata_newPostingDate` | Convert to datetime; drop invalid dates | DATETIME |
-| `metadata_expiryDate` | Convert to datetime; drop invalid dates | DATETIME |
+| `metadata_totalNumberJobApplication` | None | INTEGER |
+| `metadata_totalNumberOfView` | None | INTEGER |
+| `metadata_repostCount` | None | INTEGER |
+| `metadata_isPostedOnBehalf` | None | BOOLEAN |
+| `metadata_originalPostingDate` | Convert to datetime; drop invalid dates; No missing value after dropping single row | DATETIME |
+| `metadata_newPostingDate` | Convert to datetime; drop invalid dates; No missing value after dropping single row | DATETIME |
+| `metadata_expiryDate` | Convert to datetime; drop invalid dates; No missing value after dropping single row | DATETIME |
 
 
-### Derived Features Added
+### Derived Features Added (15 columns)
 
 | Feature | Derived From | Type |
 |---------|--------------|------|
@@ -159,14 +156,14 @@ These derived features are calculated during data preparation and stored in `SGJ
 
 ---
 
-## 4. Columns to Drop 
+## 4. Columns to Drop  (5 columns)
 ### Week 1 EDA highlights (See readme.md)
 
 | Column | Reason |
 |--------|--------|
 | `occupationId` | 100% null values; no business value |
-| `status_id` | Redundant with `status_jobStatus` | 
-| `status_jobStatus` | only contain `Closed` or `Re-opened` | 
+| `status_id` | 100% 0 values; no business value | 
+| `status_jobStatus` | only contain 'Open', 'Closed', 'Re-open' | 
 | `salary_type` | Redundant given only 1 unique value `monthly` | 
 | `categories` | Replaced by parsed `industry_list` and `industry_primary` |
 
