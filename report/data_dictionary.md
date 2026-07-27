@@ -122,7 +122,6 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `numberOfVacancies` | None | INTEGER |
 | `salary_minimum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
 | `salary_maximum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
-| `salary_type` | Filter to "Monthly" only (drop others) | TEXT |
 | `metadata_totalNumberJobApplication` | Fill nulls with 0 | INTEGER |
 | `metadata_totalNumberOfView` | Fill nulls with 0 | INTEGER |
 | `metadata_repostCount` | Fill nulls with 0 | INTEGER |
