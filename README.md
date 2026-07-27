@@ -108,15 +108,22 @@ skill chain:
 ## 4. Project Structure
 
 ```
+
 module1-project/
-├── README.md                  ← you are here
-├── .gitignore                 ← excludes the large raw CSV
-├── explore.ipynb              ← Week 1: initial EDA on 50k sample (Jenny)
-├── clean_db.ipynb             ← data cleaning notebook (Quxin)
-├── SGJobData_cleaned.csv.gz   ← cleaned, compressed dataset (Quxin)
-├── db/                        ← folder for database outputs (Wong Lai Yoke)
+├── .gitignore
+├── README.md
+├── environment.yml
+├── requirements.txt
+├── db/
+│   └── SGJobData.csv               ← Raw data (included in .gitignore)
+|   └── SGJobData_cleaned.csv.gz        ← cleaned, compressed dataset (Quxin) (will be replaced)
+├── notebooks/
+│   ├── explore.ipynb               ← Jenny's 50k EDA (reference)
+│   ├── clean_db.ipynb              ← Quxin's cleaning (reference/ require update)
+│   └── full_eda.ipynb           ← YOUR new full EDA (Wei Xiang)
 ├── app/                       ← (planned) Streamlit dashboard code (Gerine)
-└── report/                    ← (planned) written report, Sections 1–4 (team)
+└── report/                    ← written report, Sections 1–4 (team)
+
 ```
 
 ---
