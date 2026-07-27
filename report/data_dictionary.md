@@ -20,17 +20,17 @@ This document defines the final database schema for `SGJobData.db`, which serves
 |-------------|------|-------------|-------|
 | `title` | TEXT | Job title (free text) | Used for role identification |
 | `categories` | JSON | Industry/sector categories (array of objects) | Contains `id` and `category` fields; needs parsing |
-| `positionLevels` | TEXT | Seniority level | Values: Entry, Mid, Senior, Executive, Lead |
-| `employmentTypes` | TEXT | Employment type | Values: Permanent, Full Time, Part Time, Contract |
+| `positionLevels` | TEXT | Seniority level | Values: Fresh/entry level, Non-executive, Junior Executive, Executive, Senior Executive, Professional, Manager,  Middle Management, Senior Management |
+| `employmentTypes` | TEXT | Employment type | Values: Permanent, Full Time, Part Time, Contract, Temporary, Internship/Attachment, Freelance, Flexi-work |
 | `numberOfVacancies` | INTEGER | Number of positions available | Used for demand calculation |
 
 ### Salary Information
 
 | Column Name | Type | Description | Notes |
 |-------------|------|-------------|-------|
-| `salary_minimum` | INTEGER | Minimum monthly salary (SGD) | Contains outliers ($1 - $205,000) |
-| `salary_maximum` | INTEGER | Maximum monthly salary (SGD) | Contains outliers ($1 - $205,000) |
-| `salary_type` | TEXT | Salary period | Values: Monthly, Hourly, Annual, Daily |
+| `salary_minimum` | INTEGER | Minimum monthly salary (SGD) | Contains outliers ($0 - $3.5e5) |
+| `salary_maximum` | INTEGER | Maximum monthly salary (SGD) | Contains outliers ($0 - $2.533e7)  |
+| `salary_type` | TEXT | Salary period | Values: Monthly |
 | `average_salary` | FLOAT | Average salary (pre-calculated) | May be inconsistently derived; verify or recalculate |
 
 ### Application & Engagement Metrics
@@ -56,8 +56,8 @@ This document defines the final database schema for `SGJobData.db`, which serves
 |-------------|------|-------------|-------|
 | `metadata_jobPostId` | TEXT | Unique job posting identifier | Primary key candidate |
 | `postedCompany_name` | TEXT | Company name | For company-level analysis |
-| `status_id` | INTEGER | Job status identifier code | Redundant with `status_jobStatus` |
-| `status_jobStatus` | TEXT | Job status | Values: Open, Closed |
+| `status_id` | INTEGER | Job status identifier code | **100% 0** - no usable data |
+| `status_jobStatus` | TEXT | Job status | Values: Open, Closed, Re-open |
 | `occupationId` | INTEGER | Occupation classification ID | **100% null** - no usable data |
 
 ---
@@ -116,9 +116,9 @@ These derived features are calculated during data preparation and stored in `SGJ
 |--------|-------------------|------------|
 | `metadata_jobPostId` | None | TEXT (PK) |
 | `title` | None | TEXT |
-| `postedCompany_name` | Fill nulls with "Unknown" | TEXT |
-| `positionLevels` | Standardize values (e.g., "Executive" → "Executive") | TEXT |
-| `employmentTypes` | Standardize values | TEXT |
+| `postedCompany_name` | None. No missing value after dropping single row | TEXT |
+| `positionLevels` | None. Already standardized | TEXT |
+| `employmentTypes` | None. Already standardized | TEXT |
 | `numberOfVacancies` | None | INTEGER |
 | `salary_minimum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
 | `salary_maximum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
@@ -126,10 +126,15 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `metadata_totalNumberOfView` | Fill nulls with 0 | INTEGER |
 | `metadata_repostCount` | Fill nulls with 0 | INTEGER |
 | `metadata_isPostedOnBehalf` | Fill nulls with False | BOOLEAN |
+| `salary_type` | None. Only "Monthly" in this column | TEXT |
+| `metadata_totalNumberJobApplication` | None. No missing value after dropping single row | INTEGER |
+| `metadata_totalNumberOfView` | None. No missing value after dropping single row | INTEGER |
+| `metadata_repostCount` | None. No missing value after dropping single row | INTEGER |
+| `metadata_isPostedOnBehalf` | None. No missing value after dropping single row | BOOLEAN |
 | `metadata_originalPostingDate` | Convert to datetime; drop invalid dates | DATETIME |
 | `metadata_newPostingDate` | Convert to datetime; drop invalid dates | DATETIME |
 | `metadata_expiryDate` | Convert to datetime; drop invalid dates | DATETIME |
-| `status_jobStatus` | Keep as-is (Open/Closed/Filled) | TEXT |
+| `status_jobStatus` | Keep as-is (Open/Closed/Re-open) | TEXT |
 
 ### Derived Features Added
 
@@ -159,8 +164,8 @@ These derived features are calculated during data preparation and stored in `SGJ
 | Column | Reason |
 |--------|--------|
 | `occupationId` | 100% null values; no business value |
-| `status_id` | Redundant with `status_jobStatus` | 
-| `salary_type` | Redundant given only 1 unique value `monthly` | 
+| `status_id` | 100% 0 values; no business value |
+| `average_salary` | Inconsistent calculation; recalculated from min/max, repalced by column 'salary_median' |
 | `categories` | Replaced by parsed `industry_list` and `industry_primary` |
 
 ---
