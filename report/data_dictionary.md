@@ -29,7 +29,7 @@ This document defines the final database schema for `SGJobData.db`, which serves
 | Column Name | Type | Description | Notes |
 |-------------|------|-------------|-------|
 | `salary_minimum` | INTEGER | Minimum monthly salary (SGD) | Contains outliers ($0 - $3.5e5) |
-| `salary_maximum` | INTEGER | Maximum monthly salary (SGD) | Contains outliers ($0 - $2.533e7) |
+| `salary_maximum` | INTEGER | Maximum monthly salary (SGD) | Contains outliers ($0 - $2.533e7)  |
 | `salary_type` | TEXT | Salary period | Values: Monthly |
 | `average_salary` | FLOAT | Average salary (pre-calculated) | May be inconsistently derived; verify or recalculate |
 
