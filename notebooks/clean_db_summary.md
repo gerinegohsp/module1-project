@@ -1,6 +1,6 @@
 # Step by step summarize the clean procedure
 
-## Analysis 1
+## Step 1 - Analysis 1
 
 | Analysis | Finding | Action recorded |
 |---------|--------------|------|
@@ -13,7 +13,7 @@
 | df.duplicated().sum() | 3987 duplicated row found | drop duplicated row |
 | df.isnull().sum() | 11 columns has missing value | recheck to decide drop or fill after drop duplicate rows and meaningless columns |
 
-## Clean 1
+## Step 2 - Clean 1
 
 #### Drop duplicates, keep='first' ensures you keep the first occurrence and delete the rest
 df = df.drop_duplicates(keep='first')
@@ -22,12 +22,12 @@ df = df.drop_duplicates(keep='first')
 columns_to_drop = ['occupationId', 'status_id', 'status_jobStatus','salary_type']
 df = df.drop(columns=columns_to_drop, axis=1)
 
-## Analysis 2
+## Step 3 - Analysis 2
 | Analysis | Finding | Action recorded |
 |---------|--------------|------|
 | df[df.isnull().any(axis=1)].index.tolist() | only one row [197478] has missing value, in 11 columns | drop this row |
 
-## Clean 2
+## Step 4 - Clean 2
 
 #### Drop the row with missing values (row 197478)
 df = df.dropna()
@@ -40,13 +40,9 @@ date_cols = [
 ]
 df[date_cols] = df[date_cols].apply(pd.to_datetime)
 
+## Step 5 - create new columns based on "report/data_dictionary.md" for following analysis. Total 15 columns
 
-## EDA 1
-#### create new columns based on "report/data_dictionary.md" for following analysis. Total 15 columns
-
-## Clean 3
-
-#### re-check the db after cleaning
+## Step 6 - re-check the db after cleaning
 
 | Analysis | Finding | Action recorded |
 |---------|--------------|------|
@@ -58,4 +54,37 @@ df[date_cols] = df[date_cols].apply(pd.to_datetime)
 | df.duplicated().sum() | no duplicate rows | - |
 | df.isnull().sum() | no missing value | - |
 
+## Step 7 - Analysis and clean on salary_maximum and salary_minimum
 
+#### The highside of salary_maximum
+
+| Analysis | Finding | Action taken |
+|---------|--------------|------|
+| draw box plot of salary_maximum by positionLevels | 12 obvious outliers | furture check detail |
+| list the record with top 12 salary_maximum | all of these record are not reasonable | drop these 12 records |
+| re-draw box plot of salary_maximum by positionLevels | 5 obvious outliers  | furture check detail |
+| list the record with top 5 salary_maximum | 4 of the 5 records are not reasonable | drop these 4 records |
+| re-draw box plot of salary_maximum by positionLevels | No obvious outliers  | furture check detail |
+| list the record with top 1 salary_maximum in each positionLevels| all records are reasonable | - |
+
+#### The highside of salary_minimum
+
+| Analysis | Finding | Action taken |
+|---------|--------------|------|
+| draw box plot of salary_minimum by positionLevels | No obvious outliers  | furture check detail |
+| list the record with top 3 salary_minimum in each positionLevels| all records are reasonable | - |
+
+#### The lowside of salary_maximum and salary_minimum
+
+| Analysis | Finding | Action taken |
+|---------|--------------|------|
+|  list down the bottom 10 unique value and their count of salary_minimum and salary_maximum by positionLevels | both salary_minimum and salary_maximum start from 1 in every positionLevels | - |
+
+#### The high side of numberOfVacancies and minimumYearsExperience
+
+| Analysis | Finding | Action taken |
+|---------|--------------|------|
+| draw boxplot of numberOfVacancies and minimumYearsExperience; list down the top 10 unique value and their count of numberOfVacancies and minimumYearsExperience | numberOfVacancies has outlier values, such as 999,998,900, 500...; minimumYearsExperience has value up to 80 | keep numberOfVacancies; drop rows w/ minimumYearsExperience >40 |
+
+
+## Step 8 - Save the DB
