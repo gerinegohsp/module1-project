@@ -63,6 +63,33 @@ Q2 is our differentiator.
   sufficient for the EDA and dashboard stages.
 
 ---
+### Data Dictionary
+
+
+| Column | Type | Notes |
+|---|---|---|
+| `categories` | str (JSON array) | Example: `[{"id":21,"category":"Information Technology"}]`. A job can belong to multiple categories, so this column needs to be parsed. |
+| `employmentTypes` | str | Permanent, Full Time, Contract, Part Time, Temporary, Internship/Attachment, Freelance, or Flexi-work. |
+| `metadata_expiryDate` | date | Date when the job posting expires. |
+| `metadata_isPostedOnBehalf` | bool | `True` if a recruiter posted the job on behalf of the hiring company. |
+| `metadata_jobPostId` | str | Unique job-posting ID, for example `MCF-2023-0252866`. |
+| `metadata_newPostingDate` | date | Date of the most recent repost. |
+| `metadata_originalPostingDate` | date | Date when the job was first posted. |
+| `metadata_repostCount` | int | Number of times the same job was reposted. A high value may indicate a hard-to-fill role. |
+| `metadata_totalNumberJobApplication` | int | Total number of job applications received. |
+| `metadata_totalNumberOfView` | int | Total number of times the job posting was viewed. |
+| `minimumYearsExperience` | int | Minimum number of years of experience required. |
+| `numberOfVacancies` | int | Number of available positions or open headcount. |
+| `positionLevels` | str | Fresh/Entry Level, Junior Executive, Executive, Senior Executive, Professional, Manager, Middle Management, Senior Management, or Non-executive. |
+| `postedCompany_name` | str | Name of the poster. It may be a recruitment agency rather than the actual hiring company. |
+| `salary_minimum` | int | Minimum salary offered. |
+| `salary_maximum` | int | Maximum salary offered. |
+| `salary_type` | str | Salary frequency. Almost all records are `Monthly`. |
+| `status_jobStatus` | str | Job-posting status: Open, Closed, or Re-open. |
+| `title` | str | Free-text job title. |
+| `average_salary` | float | Pre-calculated average of `salary_minimum` and `salary_maximum`. |
+
+
 
 ## 2. Learning Outcomes
 
