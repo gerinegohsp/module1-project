@@ -178,8 +178,8 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `job_id` | TEXT | NO | PK | Unique job identifier |
 | `title` | TEXT | NO | - | Job title |
 | `company` | TEXT | YES | - | Company name |
-| `position_level` | TEXT | YES | - | Seniority level (Entry/Mid/Senior/Executive/Lead) |
-| `employment_type` | TEXT | YES | - | Employment type (Permanent/Full Time/Part Time) |
+| `position_level` | TEXT | YES | - | Seniority level (Fresh/entry level, Non-executive, Junior Executive, Executive, Senior Executive, Professional, Manager,  Middle Management, Senior Management) |
+| `employment_type` | TEXT | YES | - | Employment type (Permanent, Full Time, Part Time, Contract, Temporary, Internship/Attachment, Freelance, Flexi-work) |
 | `vacancies` | INTEGER | YES | - | Number of positions |
 | `salary_min` | INTEGER | YES | - | Minimum salary (filtered) |
 | `salary_max` | INTEGER | YES | - | Maximum salary (filtered) |
