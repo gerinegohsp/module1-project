@@ -69,11 +69,11 @@ It helps the team compare salaries, identify roles with high demand or possible 
 ## 4. Challenges & Learning
 ### Challenges
 
-Large dataset (1M+ rows) required efficient data loading and cleaning.
+- Large dataset (1M+ rows) required efficient data loading and cleaning.
 
-Missing values and outliers needed careful handling.
+- Missing values and outliers needed careful handling.
 
-We needed to turn raw data into useful hiring insights.
+- We needed to turn raw data into useful hiring insights.
 
 ### What We Learned
 
