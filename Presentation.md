@@ -30,7 +30,7 @@
 
 - **Objective:** Help the TA team decide which roles to prioritise, what salary ranges to offer, and when to post jobs by showing market demand, salary benchmarks, and competition levels across roles and industries.
 
-- **Target users & value:** TA specialists and hiring managers. Instead of guessing salary bands or posting jobs blindly, they can benchmark against 1M+ SG job postings — e.g. spotting roles where postings attract very few applications (hard-to-fill, needs stronger offers) vs. roles flooded with applicants (competitive market, can hire selectively).
+- **Target users & value:** TA specialists and hiring managers. Instead of guessing salary bands or posting jobs blindly, they can benchmark against 1M+ SG job postings. Roles with few applications may be hard to fill and may need a better offer. Roles with many applications allow the company to hire selectively, which means comparing more applicants and choosing the person who best matches the required skills, experience, and job requirements.
 
 **Success criteria:** a TA user can answer "what salary should we offer for role X?" in under one minute using the dashboard. The dashboard helps the company plan hiring better, save time, and use its recruitment budget more effectively.
 
@@ -49,6 +49,8 @@ Each question maps to specific columns and one dashboard view:
 ### Dataset
 
 The dataset covers job postings across the Singapore market. This is useful because the company competes with employers from different sectors for the same talent.
+
+For example, a company hiring a data analyst is not competing only with companies in its own sector. Banks, technology companies, healthcare organisations and logistics companies may also be recruiting data analysts. They compete for candidates from the same talent pool.
 
 - **Source:** Singapore job postings, provided by instructor
 - **Size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
