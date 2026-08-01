@@ -1,3 +1,4 @@
+# --- Setup ---
 import streamlit as st
 import pandas as pd
 import altair as alt
@@ -25,7 +26,8 @@ global_industry, global_roles, global_pos = global_aggregates(df)
 st.sidebar.header("Filters")
 
 industry = st.sidebar.selectbox("Industry", df["industry_primary"].unique())
-year = st.sidebar.selectbox("Year", sorted(df["posting_year"].unique()))
+year_options = ["All"] + sorted(df["posting_year"].unique())
+year = st.sidebar.selectbox("Year", year_options)
 agency_filter = st.sidebar.selectbox("Agency vs Direct", ["All","Agency","Direct"])
 role = st.sidebar.text_input("Search for Role")
 
@@ -36,19 +38,25 @@ chart_choice = st.sidebar.radio(
 )
 
 # --- Apply filters to dataset ---
-filtered_df = df[(df["industry_primary"] == industry) & (df["posting_year"] == year)]
+filtered_df = df[df["industry_primary"] == industry]
+
+if year != "All":
+    filtered_df = filtered_df[filtered_df["posting_year"] == year]
+
 if agency_filter == "Agency":
-    filtered_df = filtered_df[filtered_df['metadata_isPostedOnBehalf']==True]
+    filtered_df = filtered_df[filtered_df['metadata_isPostedOnBehalf'] == True]
 elif agency_filter == "Direct":
-    filtered_df = filtered_df[filtered_df['metadata_isPostedOnBehalf']==False]
+    filtered_df = filtered_df[filtered_df['metadata_isPostedOnBehalf'] == False]
 
 # --- KPI cards ---
 st.header("Key Performance Indicators for Filtered View")
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Vacancies", int(filtered_df["numberOfVacancies"].sum()))   # total vacancies
-col2.metric("Median Salary", int(filtered_df["salary_median"].median())) # median salary
-col3.metric("Apps per Vacancy", round(filtered_df["applications_per_vacancy"].mean(), 2)) # avg applications
-col4.metric("Avg Repost Count", round(filtered_df["metadata_repostCount"].mean(), 2))    # avg reposts
+col1, col2, col3, col4, col5 = st.columns(5)
+col1.metric("Total Vacancies", int(filtered_df["numberOfVacancies"].sum()))
+col2.metric("Job Postings", int(filtered_df["numberOfVacancies"].count()))
+col3.metric("Median Salary", int(filtered_df["salary_median"].median()))
+col4.metric("Apps per Vacancy", round(filtered_df["applications_per_vacancy"].mean(), 2))
+col5.metric("Avg Repost Count", round(filtered_df["metadata_repostCount"].mean(), 2))
+
 
 # --- Q1 Salary Benchmark ---
 if chart_choice == "Q1 Salary Benchmark":
@@ -72,29 +80,66 @@ if chart_choice == "Q1 Salary Benchmark":
         st.write(f"Found {len(role_data)} jobs for {role}")
         st.write(role_data["average_salary"].describe())
 
-# --- Q2 Hard-to-Fill Roles (aggregated by industry) ---
+# --- Q2 Hard-to-Fill Roles by Industry (Chart View) ---
 elif chart_choice == "Q2 Hard-to-Fill Roles":
-    scatter_data = df.groupby("industry_primary").agg({
-        "metadata_repostCount":"sum",
-        "applications_per_vacancy":"mean"
-    }).reset_index()
+    # Step 1: Filter jobs with activity data
+    df_valid = df[
+        (df['metadata_totalNumberJobApplication'] > 0) | 
+        (df['metadata_repostCount'] > 0) |
+        (df['applications_per_vacancy'] > 0)
+    ].copy()
 
-    hard_to_fill = scatter_data.sort_values(
-        ["metadata_repostCount","applications_per_vacancy"],
-        ascending=[False, True]
-    ).head(10)
+    # Step 2: Calculate median thresholds
+    median_reposts = df_valid['metadata_repostCount'].median()
+    median_apps_per_vac = df_valid['applications_per_vacancy'].median()
 
-    st.subheader("Top 10 Hard-to-Fill Industries")
-    st.dataframe(hard_to_fill[["industry_primary","metadata_repostCount","applications_per_vacancy"]])
+    # Step 3: Define hard-to-fill condition
+    df_valid['is_hard_to_fill'] = (
+        (df_valid['metadata_repostCount'] >= median_reposts) &
+        (df_valid['applications_per_vacancy'] <= median_apps_per_vac)
+    )
 
-    q2_chart = alt.Chart(scatter_data).mark_circle(size=80).encode(
-        x=alt.X("metadata_repostCount", title="Total Reposts"),
-        y=alt.Y("applications_per_vacancy", title="Average Applications per Vacancy"),
-        tooltip=["industry_primary","metadata_repostCount","applications_per_vacancy"]
-    ).properties(title="Q2: Hard-to-Fill Roles (Aggregated by Industry)", width=700).interactive()
+    # Step 4: Aggregate by industry
+    industry_htf = df_valid.groupby("industry_primary").agg(
+        Total_Jobs=("is_hard_to_fill", "count"),
+        Hard_to_Fill_Count=("is_hard_to_fill", "sum"),
+        Pct_Hard_to_Fill=("is_hard_to_fill", "mean")
+    ).reset_index()
+
+    # Convert fraction to percentage
+    industry_htf["Pct_Hard_to_Fill"] = industry_htf["Pct_Hard_to_Fill"] * 100
+
+    # Minimum sample size filter
+    industry_htf = industry_htf[industry_htf["Total_Jobs"] >= 50]
+
+    # Sort descending and take Top 10
+    industry_htf = industry_htf.sort_values("Pct_Hard_to_Fill", ascending=False).head(10)
+
+    # Step 5: Show chart instead of table
+    st.subheader("Top 10 Industries with Highest % Hard to Fill (Chart View)")
+    q2_chart = alt.Chart(industry_htf).mark_bar().encode(
+        x=alt.X("Pct_Hard_to_Fill", title="% Hard to Fill"),
+        y=alt.Y("industry_primary", sort="-x", title="Industry"),
+        tooltip=["industry_primary","Total_Jobs","Hard_to_Fill_Count","Pct_Hard_to_Fill"]
+    ).properties(width=700, height=400)
+
     st.altair_chart(q2_chart)
 
-## --- Q3 Demand ---
+    # --- Aggregated scatter chart (industry-level) ---
+    scatter_data = df.groupby("industry_primary").agg(
+        avg_reposts=("metadata_repostCount","mean"),
+        avg_apps=("applications_per_vacancy","mean")
+    ).reset_index()
+
+    q2_chart = alt.Chart(scatter_data).mark_circle(size=80).encode(
+        x=alt.X("avg_reposts", title="Average Reposts"),
+        y=alt.Y("avg_apps", title="Average Applications per Vacancy"),
+        tooltip=["industry_primary","avg_reposts","avg_apps"]
+    ).properties(title="Q2: Hard-to-Fill Roles (Industry Aggregates)", width=700).interactive()
+
+    st.altair_chart(q2_chart)
+
+# --- Q3 Demand ---
 elif chart_choice == "Q3 Demand":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
 
@@ -103,16 +148,14 @@ elif chart_choice == "Q3 Demand":
         demand_filtered = (
             filtered_df.groupby("title")["numberOfVacancies"].sum()
             .reset_index()
-            .sort_values("numberOfVacancies", ascending=False)  # sort high → low
+            .sort_values("numberOfVacancies", ascending=False)
             .head(20)
         )
-
         chart = alt.Chart(demand_filtered).mark_bar().encode(
-            x=alt.X("title", sort="-y", axis=alt.Axis(title="Role", labelAngle=-45)),  # enforce sort
+            x=alt.X("title", sort="-y", axis=alt.Axis(title="Role", labelAngle=-45)),
             y=alt.Y("numberOfVacancies", axis=alt.Axis(title="Vacancies")),
             tooltip=["title","numberOfVacancies"]
         ).properties(width=700).interactive()
-
         st.subheader("Top 20 Roles by Demand (Filtered View)")
         st.altair_chart(chart)
         st.dataframe(demand_filtered)
@@ -122,23 +165,58 @@ elif chart_choice == "Q3 Demand":
         demand_global = (
             df.groupby("title")["numberOfVacancies"].sum()
             .reset_index()
-            .sort_values("numberOfVacancies", ascending=False)  # sort high → low
+            .sort_values("numberOfVacancies", ascending=False)
             .head(20)
         )
-
         chart = alt.Chart(demand_global).mark_bar().encode(
-            x=alt.X("title", sort="-y", axis=alt.Axis(title="Role", labelAngle=-45)),  # enforce sort
+            x=alt.X("title", sort="-y", axis=alt.Axis(title="Role", labelAngle=-45)),
             y=alt.Y("numberOfVacancies", axis=alt.Axis(title="Vacancies")),
             tooltip=["title","numberOfVacancies"]
         ).properties(width=700).interactive()
-
         st.subheader("Top 20 Roles by Demand (Global View)")
         st.altair_chart(chart)
         st.dataframe(demand_global)
 
 
+# --- Q4 Selective Hire by Industry ---
+elif chart_choice == "Q4 Selective Hire":
+    # Step 1: Create df_valid (same as EDA)
+    df_valid = df[
+        (df['metadata_totalNumberJobApplication'] > 0) | 
+        (df['metadata_repostCount'] > 0) |
+        (df['applications_per_vacancy'] > 0)
+    ].copy()
 
-# --- Q4 Selective Hiring (aggregated by industry) ---
+    # Step 2: Calculate thresholds (25th and 75th percentiles)
+    low_reposts_threshold = df_valid['metadata_repostCount'].quantile(0.25)
+    high_apps_threshold = df_valid['applications_per_vacancy'].quantile(0.75)
+
+    # Step 3: Define selective hire condition
+    df_valid['is_selective_hire'] = (
+        (df_valid['metadata_repostCount'] <= low_reposts_threshold) &
+        (df_valid['applications_per_vacancy'] >= high_apps_threshold)
+    )
+
+    # --- Q4 Selective Hire by Industry ---
+elif chart_choice == "Q4 Selective Hire":
+    # Step 1: Create df_valid (same as EDA)
+    df_valid = df[
+        (df['metadata_totalNumberJobApplication'] > 0) | 
+        (df['metadata_repostCount'] > 0) |
+        (df['applications_per_vacancy'] > 0)
+    ].copy()
+
+    # Step 2: Calculate thresholds (25th and 75th percentiles)
+    low_reposts_threshold = df_valid['metadata_repostCount'].quantile(0.25)
+    high_apps_threshold = df_valid['applications_per_vacancy'].quantile(0.75)
+
+    # Step 3: Define selective hire condition
+    df_valid['is_selective_hire'] = (
+        (df_valid['metadata_repostCount'] <= low_reposts_threshold) &
+        (df_valid['applications_per_vacancy'] >= high_apps_threshold)
+    )
+
+   # --- Q4 Selective Hiring (aggregated by industry) ---
 elif chart_choice == "Q4 Selective Hiring":
     scatter_data = df.groupby("industry_primary").agg({
         "metadata_repostCount":"sum",
@@ -161,8 +239,6 @@ elif chart_choice == "Q4 Selective Hiring":
     st.altair_chart(q4_chart)
 
 
-
-
 # --- Q5 Posting Trends (Filtered vs Global Tabs) ---
 elif chart_choice == "Q5 Posting Trends":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
@@ -173,21 +249,17 @@ elif chart_choice == "Q5 Posting Trends":
             postings=('posting_month_year','count'),
             avg_apps=('applications_per_vacancy','mean')
         ).reset_index()
-
-        # Melt into long format for legend
         trend_long = trend_data.melt(
             id_vars=["posting_month_year"],
             value_vars=["postings","avg_apps"],
             var_name="Metric",
             value_name="Value"
         )
-
         chart = alt.Chart(trend_long).mark_line().encode(
             x=alt.X("posting_month_year", axis=alt.Axis(title="Month-Year", labelAngle=-45)),
             y=alt.Y("Value", axis=alt.Axis(title="Count / Avg Apps")),
-            color=alt.Color("Metric", title="Legend")  # adds legend
+            color=alt.Color("Metric", title="Legend")
         ).properties(width=700).interactive()
-
         st.subheader("Job Postings & Avg Applications Over Time (Filtered)")
         st.altair_chart(chart)
 
@@ -197,34 +269,30 @@ elif chart_choice == "Q5 Posting Trends":
             postings=('posting_month_year','count'),
             avg_apps=('applications_per_vacancy','mean')
         ).reset_index()
-
         trend_long = trend_data.melt(
             id_vars=["posting_month_year"],
             value_vars=["postings","avg_apps"],
             var_name="Metric",
             value_name="Value"
         )
-
         chart = alt.Chart(trend_long).mark_line().encode(
             x=alt.X("posting_month_year", axis=alt.Axis(title="Month-Year", labelAngle=-45)),
             y=alt.Y("Value", axis=alt.Axis(title="Count / Avg Apps")),
-            color=alt.Color("Metric", title="Legend")  # adds legend
+            color=alt.Color("Metric", title="Legend")
         ).properties(width=700).interactive()
-
         st.subheader("Job Postings & Avg Applications Over Time (Global)")
         st.altair_chart(chart)
-
 
 # --- Q6 Agency Filter (Filtered vs Global Tabs) ---
 elif chart_choice == "Q6 Agency Filter":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
 
+    # --- Filtered View ---
     with tab1:
         agency_data = filtered_df.groupby("metadata_isPostedOnBehalf")["numberOfVacancies"].sum().reset_index()
         agency_data["metadata_isPostedOnBehalf"] = agency_data["metadata_isPostedOnBehalf"].map({True:"Agency",False:"Direct Employer"})
         total_vacancies = agency_data["numberOfVacancies"].sum()
         agency_data["percentage"] = (agency_data["numberOfVacancies"]/total_vacancies*100).round(1)
-
         chart = alt.Chart(agency_data).mark_bar().encode(
             x=alt.X("metadata_isPostedOnBehalf", axis=alt.Axis(title="Posting Type")),
             y=alt.Y("numberOfVacancies", axis=alt.Axis(title="Vacancies")),
@@ -233,6 +301,7 @@ elif chart_choice == "Q6 Agency Filter":
         st.subheader("Vacancies by Posting Type (Filtered)")
         st.altair_chart(chart)
 
+    # --- Global View ---
     with tab2:
         agency_data = df.groupby("metadata_isPostedOnBehalf")["numberOfVacancies"].sum().reset_index()
         agency_data["metadata_isPostedOnBehalf"] = agency_data["metadata_isPostedOnBehalf"].map({True:"Agency",False:"Direct Employer"})
@@ -244,7 +313,10 @@ elif chart_choice == "Q6 Agency Filter":
             y=alt.Y("numberOfVacancies", axis=alt.Axis(title="Vacancies")),
             tooltip=["metadata_isPostedOnBehalf","numberOfVacancies","percentage"]
         ).properties(width=700).interactive()
+
         st.subheader("Vacancies by Posting Type (Global)")
         st.altair_chart(chart)
+        st.dataframe(agency_data)
+
 
     #streamlit run dashboard.py (run in terminal to start the dashboard)
