@@ -30,7 +30,7 @@
 
 - **Objective:** Help the TA team decide which roles to prioritise, what salary ranges to offer, and when to post jobs by showing market demand, salary benchmarks, and competition levels across roles and industries.
 
-- **Target users & value:** TA specialists and hiring managers. Instead of guessing salary bands or posting jobs blindly, they can benchmark against 1M+ real MyCareersFuture postings — e.g. spotting roles where postings attract very few applications (hard-to-fill, needs stronger offers) vs. roles flooded with applicants (competitive market, can hire selectively).
+- **Target users & value:** TA specialists and hiring managers. Instead of guessing salary bands or posting jobs blindly, they can benchmark against 1M+ SG job postings — e.g. spotting roles where postings attract very few applications (hard-to-fill, needs stronger offers) vs. roles flooded with applicants (competitive market, can hire selectively).
 
 **Success criteria:** a TA user can answer "what salary should we offer for role X?" in under one minute using the dashboard. The dashboard helps the company plan hiring better, save time, and use its recruitment budget more effectively.
 
@@ -50,7 +50,7 @@ Each question maps to specific columns and one dashboard view:
 
 The dataset covers job postings across the Singapore market. This is useful because the company competes with employers from different sectors for the same talent.
 
-- **Source:** Singapore job postings (MyCareersFuture), provided by instructor
+- **Source:** Singapore job postings, provided by instructor
 - **Size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
 - **Period covered:** Oct 2022 – May 2024
 
