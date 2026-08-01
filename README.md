@@ -16,6 +16,14 @@ helping talent acquisition teams make evidence-based hiring decisions.
 
 - **Business scenario:** A talent acquisition (TA) team at a mid-sized
   Singapore company planning its hiring strategy for the year ahead.
+
+  #### **Why Plan Ahead?**
+
+       Hiring is a lengthy process that involves budget approval, recruitment, interviews, and onboarding.
+
+       Planning ahead allows companies to allocate resources and prepare for difficult-to-fill roles before hiring needs become urgent.
+
+- **Problem statement:** The TA team needs better information to plan hiring. Without salary benchmarks and market insights, the company may offer unsuitable salaries, struggle to attract candidates, take longer to fill vacancies, and need to repost jobs multiple times. This can increase recruitment costs and effort.
 - **Objective:** Help the TA team decide **which roles to prioritise, what
   salary ranges to offer, and when to post jobs** — by revealing market
   demand, salary benchmarks, and competition levels across roles and
@@ -28,7 +36,7 @@ helping talent acquisition teams make evidence-based hiring decisions.
 
 **Success criteria:** a TA user can answer *"what salary should we offer for
 role X?"* in under one minute using the dashboard.
-
+The dashboard helps the company plan hiring better, save time, and use its recruitment budget more effectively.
 ### Key Business Questions
 
 Each question maps to specific columns and one dashboard view:
@@ -50,6 +58,8 @@ Q1 + Q3 satisfy the pass requirement (one overview + one drill-down);
 Q2 is our differentiator.
 
 ### Dataset
+
+The dataset covers job postings across the Singapore market. This is useful because the company competes with employers from different sectors for the same talent. 
 
 - **Source:** Singapore job postings (MyCareersFuture), provided by instructor
 - **Size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
