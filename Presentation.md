@@ -30,7 +30,7 @@
 
 - **Objective:** Help the TA team decide which roles to prioritise, what salary ranges to offer, and when to post jobs by showing market demand, salary benchmarks, and competition levels across roles and industries.
 
-- **Target users & value:** TA specialists and hiring managers. Instead of guessing salary bands or posting jobs blindly, they can benchmark against 1M+ real MyCareersFuture postings — e.g. spotting roles where postings attract very few applications (hard-to-fill, needs stronger offers) vs. roles flooded with applicants (competitive market, can hire selectively).
+- **Target users & value:** TA specialists and hiring managers. Instead of guessing salary bands or posting jobs blindly, they can benchmark against 1M+ SG job postings — e.g. spotting roles where postings attract very few applications (hard-to-fill, needs stronger offers) vs. roles flooded with applicants (competitive market, can hire selectively).
 
 **Success criteria:** a TA user can answer "what salary should we offer for role X?" in under one minute using the dashboard. The dashboard helps the company plan hiring better, save time, and use its recruitment budget more effectively.
 
@@ -39,18 +39,18 @@ Each question maps to specific columns and one dashboard view:
 | # | Business question | Key columns | Chart / view |
 |---|---|---|---|
 | Q1 | What salary should we offer for role X? | title, categories, positionLevels, salary columns | Box plot by level/industry + median/P25/P75 metric cards, with filters |
-| Q2 | Which roles are hard to fill? ⭐ | metadata_repostCount, metadata_totalNumberJobApplication ÷ numberOfVacancies | Scatter plot (X = repost count, Y = applications per vacancy) — bottom-right quadrant = hard-to-fill |
+| Q2 | Which roles are hard to fill?  | metadata_repostCount, metadata_totalNumberJobApplication ÷ numberOfVacancies | Scatter plot (X = repost count, Y = applications per vacancy) — bottom-right quadrant = hard-to-fill |
 | Q3 | Which roles/industries have the most demand? | parsed categories, numberOfVacancies | Horizontal bar: Top 10 industries by vacancies; bar by position level |
 | Q4 | Where can we hire selectively? | same as Q2 | Same scatter, top-left quadrant (low repost, high applications) |
 | Q5 | When should we post jobs? | metadata_originalPostingDate (monthly) | Line chart: postings & avg applications over time (from May 2023; earlier months are sparse) |
-| Q6 | Agency vs direct employer? (bonus) | metadata_isPostedOnBehalf | Global filter toggle across all views |
+| Q6 | Agency vs direct employer?  | metadata_isPostedOnBehalf | Global filter toggle across all views |
 
 ## 2. Data Handling & Process
 ### Dataset
 
 The dataset covers job postings across the Singapore market. This is useful because the company competes with employers from different sectors for the same talent.
 
-- **Source:** Singapore job postings (MyCareersFuture), provided by instructor
+- **Source:** Singapore job postings, provided by instructor
 - **Size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
 - **Period covered:** Oct 2022 – May 2024
 
@@ -62,6 +62,10 @@ The dashboard answer six business questions to help the TA team’s annual hirin
 
 It helps the team compare salaries, identify roles with high demand or possible hiring difficulties, understand applicant response, review posting trends and consider whether agency support is needed.
 
+**Dashboard link:**
+
+- **Local URL:** <http://localhost:8501>
+- **Network URL:** <http://172.20.196.98:8501>
 ## 4. Challenges & Learning
 ### Challenges
 
