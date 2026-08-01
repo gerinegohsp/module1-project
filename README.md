@@ -19,9 +19,9 @@ helping talent acquisition teams make evidence-based hiring decisions.
 
   #### **Why Plan Ahead?**
 
-       Hiring is a lengthy process that involves budget approval, recruitment, interviews, and onboarding.
+   Hiring is a lengthy process that involves budget approval, recruitment, interviews, and onboarding.
 
-       Planning ahead allows companies to allocate resources and prepare for difficult-to-fill roles before hiring needs become urgent.
+   Planning ahead allows companies to allocate resources and prepare for difficult-to-fill roles before hiring needs become urgent.
 
 - **Problem statement:** The TA team needs better information to plan hiring. Without salary benchmarks and market insights, the company may offer unsuitable salaries, struggle to attract candidates, take longer to fill vacancies, and need to repost jobs multiple times. This can increase recruitment costs and effort.
 - **Objective:** Help the TA team decide **which roles to prioritise, what
@@ -72,7 +72,10 @@ The dataset covers job postings across the Singapore market. This is useful beca
   version (`SGJobData_cleaned.csv.gz`) is included in this repo and is
   sufficient for the EDA and dashboard stages.
 
----
+### Data Handling & Process
+
+- **Step by step summarize the clean procedure:** [View file](https://github.com/jennyhwo85-lgtm/module1-project/blob/main/notebooks/clean_db_summary.md)
+
 ### Data Dictionary
 
 
@@ -158,6 +161,7 @@ module1-project/
 │   └── SGJobData.csv               ← Raw data (included in .gitignore)
 |   └── SGJobData_cleaned.csv.gz        ← cleaned, compressed dataset (Quxin) (will be replaced)
 ├── notebooks/
+├── ├── clean_db_summary.md       ← Step by step summarize the clean procedure
 │   ├── explore.ipynb               ← Jenny's 50k EDA (reference)
 │   ├── clean_db.ipynb              ← Quxin's cleaning (reference/ require update)
 │   └── full_eda.ipynb           ← new full EDA (Wei Xiang)
