@@ -1,4 +1,4 @@
-# Singapore Jobs Analytics - A Business Case for Talent Acquisition Market Intelligence Insights Dashboard
+# Singapore Jobs Analytics : A Business Case for a Talent Acquisition Market Intelligence Dashboard
 
 ## Contents
 
