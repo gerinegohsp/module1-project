@@ -72,9 +72,7 @@ The dataset covers job postings across the Singapore market. This is useful beca
   version (`SGJobData_cleaned.csv.gz`) is included in this repo and is
   sufficient for the EDA and dashboard stages.
 
-### Data Handling & Process
 
-- **Step by step summarize the clean procedure:** [View file](https://github.com/jennyhwo85-lgtm/module1-project/blob/main/notebooks/clean_db_summary.md)
 
 ### Data Dictionary
 
@@ -102,7 +100,9 @@ The dataset covers job postings across the Singapore market. This is useful beca
 | `title` | str | Free-text job title. |
 | `average_salary` | float | Pre-calculated average of `salary_minimum` and `salary_maximum`. |
 
+### Data Handling & Process
 
+- **Step by step summarize the clean procedure:** [View file](https://github.com/jennyhwo85-lgtm/module1-project/blob/main/notebooks/clean_db_summary.md)
 
 ## 2. Learning Outcomes
 
