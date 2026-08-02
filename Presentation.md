@@ -1,13 +1,17 @@
 # Singapore Jobs Analytics : A Business Case for a Talent Acquisition Market Intelligence Dashboard
 
+Presented by: Wong Lai Yoke and Qu Xin
+
+
 ## Contents
 
 1. Business Case
 2. Data Handling & Process
 3. Dashboard / app walkthrough
 4. Challenges & Learning
+5. Conclusion
 
-## Team
+## Team (Group 3)
 | # | Member | GitHub | Primary Responsibility |
 |---|---|---|---|
 | 1 | Jenny Hwo | @jennyhwo85-lgtm | Repo setup, README (business case & scope), initial EDA on sample |
@@ -48,15 +52,17 @@ Each question maps to specific columns and one dashboard view:
 ## 2. Data Handling & Process
 ### Dataset
 
-The dataset covers job postings across the Singapore market. This is useful because the company competes with employers from different sectors for the same talent.
-
-For example, a company hiring a data analyst is not competing only with companies in its own sector. Banks, technology companies, healthcare organisations and logistics companies may also be recruiting data analysts. They compete for candidates from the same talent pool.
-
 - **Source:** Singapore job postings, provided by instructor
 - **Size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
 - **Period covered:** Oct 2022 – May 2024
 
-**Step by step summarize the clean procedure:** [View file](https://github.com/jennyhwo85-lgtm/module1-project/blob/main/notebooks/clean_db_summary.md)
+The dataset covers job postings across the Singapore market. This is useful because the company competes with employers from different sectors for the same talent.
+
+For example, a company hiring a data analyst is not competing only with companies in its own sector. Banks, technology companies, healthcare organisations and logistics companies may also be recruiting data analysts. They compete for candidates from the same talent pool.
+
+
+
+- **Step by step summarize the clean procedure:** [View file](https://github.com/jennyhwo85-lgtm/module1-project/blob/main/notebooks/clean_db_summary.md)
 
 ## 3. Dashboard / app walkthrough
 
@@ -68,6 +74,7 @@ It helps the team compare salaries, identify roles with high demand or possible 
 
 - **Local URL:** <http://localhost:8501>
 - **Network URL:** <http://172.20.196.98:8501>
+
 ## 4. Challenges & Learning
 ### Challenges
 
@@ -88,3 +95,24 @@ It helps the team compare salaries, identify roles with high demand or possible 
 
 - Include predictive analytics to forecast hiring demand and salary trends.
 - Deploy the dashboard for easier access by recruiters and hiring managers.
+
+## 4. Conclusion
+
+The dashboard turns more than 1M Singapore job postings into useful hiring information.
+
+Information + Application = Transformation
+
+- Information: Salary benchmarks, vacancies, applications and reposting patterns
+- Application: The TA team uses this information when planning recruitment
+- Transformation: Better salary offers, earlier planning and improved hiring decisions
+
+Better hiring decisions can create ROI by saving time, reducing repeated job postings, and using the recruitment budget more effectively.
+
+
+
+
+
+
+
+
+#                                  **** Thank you for listening   ****
