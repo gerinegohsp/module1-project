@@ -15,7 +15,7 @@ Presented by: Wong Lai Yoke and Qu Xin
 | # | Member | GitHub | Primary Responsibility |
 |---|---|---|---|
 | 1 | Jenny Hwo | @jennyhwo85-lgtm | Repo setup, README (business case & scope), initial EDA on sample |
-| 2 | Wong Lai Yoke | @laiyokew6996 | db/ folder setup & dataset handling (via PR) |
+| 2 | Wong Lai Yoke | @laiyokew6996 | db/ folder setup, prepare slide deck, Chart Visualization |
 | 3 | Quxin | @quxin43 | Data cleaning (missing values, outliers) & conversion to .db/.sql |
 | 4 | Wei Xiang (小翔) | @boyboi86 | Full EDA & feature engineering on cleaned data |
 | 5 | Gerine Goh Sipei | @gerinegohsp | Streamlit dashboard & visualisation |
