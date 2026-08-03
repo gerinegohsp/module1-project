@@ -188,7 +188,7 @@ module1-project/
 - `categories` is stored as a JSON string (multi-label) → needs parsing
   before industry-level analysis.
 - Early months (Oct 2022 – Feb 2023) are sparse; volume stabilises from
-  ~May 2023 → time-trend views will note this.
+  ~May 2023 → time-trend views will note this. (please refer to the dashboard.py under employment trend)
 
 ---
 
