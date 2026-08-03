@@ -209,6 +209,13 @@ module1-project/
 ## 6. Setup & How to Run
 
 ### Prerequisites
+- `occupationId` is 100% null → will be dropped.
+- Salary outliers found (min $1, max $205,000/month vs. median $3,750) →
+  a justified filter range will be applied during cleaning.
+- `categories` is stored as a JSON string (multi-label) → needs parsing
+  before industry-level analysis.
+- Early months (Oct 2022 – Feb 2023) are sparse; volume stabilises from
+  ~May 2023 → time-trend views will note this. (please refer to the dashboard.py under employment trend)
 
 - Python 3.10
 - Conda (recommended) or pip

@@ -113,7 +113,7 @@ elif chart_choice == "Q2 Hard-to-Fill Roles":
     industry_htf = industry_htf[industry_htf["Total_Jobs"] >= 50]
 
     # Sort descending and take Top 10
-    industry_htf = industry_htf.sort_values("Pct_Hard_to_Fill", ascending=False).head(10)
+    industry_htf = industry_htf.sort_values(by="Pct_Hard_to_Fill", ascending=False).head(10)
 
     # Step 5: Show chart instead of table
     st.subheader("Top 10 Industries with Highest % Hard to Fill (Chart View)")
@@ -239,84 +239,111 @@ elif chart_choice == "Q4 Selective Hiring":
     st.altair_chart(q4_chart)
 
 
-# --- Q5 Posting Trends (Filtered vs Global Tabs) ---
 elif chart_choice == "Q5 Posting Trends":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
-
+    
+    def create_separate_charts(data, title_prefix):
+        """Create separate bar and line charts side by side"""
+        
+        trend_data = data.groupby("posting_month_year").agg(
+            postings=('posting_month_year','count'),
+            avg_apps=('applications_per_vacancy','mean')
+        ).reset_index()
+        
+        # Bar chart for postings
+        bar_chart = alt.Chart(trend_data).mark_bar(color='#1f77b4', opacity=0.7).encode(
+            x=alt.X("posting_month_year", 
+                    axis=alt.Axis(title="Month-Year", labelAngle=-45),
+                    sort=None),
+            y=alt.Y("postings", axis=alt.Axis(title="Number of Postings"))
+        ).properties(
+            width=340,
+            height=350,
+            title=f"{title_prefix} - Postings"
+        ).interactive()
+        
+        # Line chart for avg apps
+        line_chart = alt.Chart(trend_data).mark_line(color='#ff7f0e', strokeWidth=3).encode(
+            x=alt.X("posting_month_year", 
+                    axis=alt.Axis(title="Month-Year", labelAngle=-45),
+                    sort=None),
+            y=alt.Y("avg_apps", axis=alt.Axis(title="Avg Applications"))
+        ).properties(
+            width=340,
+            height=350,
+            title=f"{title_prefix} - Avg Applications"
+        ).interactive()
+        
+        # Add points to line chart
+        line_chart_with_points = line_chart + alt.Chart(trend_data).mark_circle(
+            color='#ff7f0e', 
+            size=60
+        ).encode(
+            x="posting_month_year",
+            y="avg_apps"
+        )
+        
+        return bar_chart, line_chart_with_points
+    
     # --- Filtered View ---
     with tab1:
-        trend_data = filtered_df.groupby("posting_month_year").agg(
-            postings=('posting_month_year','count'),
-            avg_apps=('applications_per_vacancy','mean')
-        ).reset_index()
-        trend_long = trend_data.melt(
-            id_vars=["posting_month_year"],
-            value_vars=["postings","avg_apps"],
-            var_name="Metric",
-            value_name="Value"
-        )
-        chart = alt.Chart(trend_long).mark_line().encode(
-            x=alt.X("posting_month_year", axis=alt.Axis(title="Month-Year", labelAngle=-45)),
-            y=alt.Y("Value", axis=alt.Axis(title="Count / Avg Apps")),
-            color=alt.Color("Metric", title="Legend")
-        ).properties(width=700).interactive()
-        st.subheader("Job Postings & Avg Applications Over Time (Filtered)")
-        st.altair_chart(chart)
-
+        st.subheader("Filtered View")
+        bar, line = create_separate_charts(filtered_df, "Filtered")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.altair_chart(bar)
+        with col2:
+            st.altair_chart(line)
+    
     # --- Global View ---
     with tab2:
-        trend_data = df.groupby("posting_month_year").agg(
-            postings=('posting_month_year','count'),
-            avg_apps=('applications_per_vacancy','mean')
-        ).reset_index()
-        trend_long = trend_data.melt(
-            id_vars=["posting_month_year"],
-            value_vars=["postings","avg_apps"],
-            var_name="Metric",
-            value_name="Value"
-        )
-        chart = alt.Chart(trend_long).mark_line().encode(
-            x=alt.X("posting_month_year", axis=alt.Axis(title="Month-Year", labelAngle=-45)),
-            y=alt.Y("Value", axis=alt.Axis(title="Count / Avg Apps")),
-            color=alt.Color("Metric", title="Legend")
-        ).properties(width=700).interactive()
-        st.subheader("Job Postings & Avg Applications Over Time (Global)")
-        st.altair_chart(chart)
+        st.subheader("Global View")
+        bar, line = create_separate_charts(df, "Global")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.altair_chart(bar)
+        with col2:
+            st.altair_chart(line)
 
 # --- Q6 Agency Filter (Filtered vs Global Tabs) ---
 elif chart_choice == "Q6 Agency Filter":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
 
-    # --- Filtered View ---
+    # --- Filtered View (Using Postings) ---
     with tab1:
-        agency_data = filtered_df.groupby("metadata_isPostedOnBehalf")["numberOfVacancies"].sum().reset_index()
-        agency_data["metadata_isPostedOnBehalf"] = agency_data["metadata_isPostedOnBehalf"].map({True:"Agency",False:"Direct Employer"})
-        total_vacancies = agency_data["numberOfVacancies"].sum()
-        agency_data["percentage"] = (agency_data["numberOfVacancies"]/total_vacancies*100).round(1)
+        # Count postings (number of job ads) instead of vacancies
+        agency_data = filtered_df.groupby("metadata_isPostedOnBehalf")["title"].count().reset_index()
+        agency_data.columns = ["metadata_isPostedOnBehalf", "postings"]
+        agency_data["metadata_isPostedOnBehalf"] = agency_data["metadata_isPostedOnBehalf"].map({True: "Agency", False: "Direct Employer"})
+        total_postings = agency_data["postings"].sum()
+        agency_data["percentage"] = (agency_data["postings"] / total_postings * 100).round(1)
+        
         chart = alt.Chart(agency_data).mark_bar().encode(
             x=alt.X("metadata_isPostedOnBehalf", axis=alt.Axis(title="Posting Type")),
-            y=alt.Y("numberOfVacancies", axis=alt.Axis(title="Vacancies")),
-            tooltip=["metadata_isPostedOnBehalf","numberOfVacancies","percentage"]
+            y=alt.Y("postings", axis=alt.Axis(title="Number of Postings")),
+            tooltip=["metadata_isPostedOnBehalf", "postings", "percentage"]
         ).properties(width=700).interactive()
-        st.subheader("Vacancies by Posting Type (Filtered)")
-        st.altair_chart(chart)
-
-    # --- Global View ---
-    with tab2:
-        agency_data = df.groupby("metadata_isPostedOnBehalf")["numberOfVacancies"].sum().reset_index()
-        agency_data["metadata_isPostedOnBehalf"] = agency_data["metadata_isPostedOnBehalf"].map({True:"Agency",False:"Direct Employer"})
-        total_vacancies = agency_data["numberOfVacancies"].sum()
-        agency_data["percentage"] = (agency_data["numberOfVacancies"]/total_vacancies*100).round(1)
-
-        chart = alt.Chart(agency_data).mark_bar().encode(
-            x=alt.X("metadata_isPostedOnBehalf", axis=alt.Axis(title="Posting Type")),
-            y=alt.Y("numberOfVacancies", axis=alt.Axis(title="Vacancies")),
-            tooltip=["metadata_isPostedOnBehalf","numberOfVacancies","percentage"]
-        ).properties(width=700).interactive()
-
-        st.subheader("Vacancies by Posting Type (Global)")
+        
+        st.subheader("Postings by Posting Type (Filtered)")
         st.altair_chart(chart)
         st.dataframe(agency_data)
 
+    # --- Global View (Using Postings) ---
+    with tab2:
+        # Count postings (number of job ads) instead of vacancies
+        agency_data = df.groupby("metadata_isPostedOnBehalf")["title"].count().reset_index()
+        agency_data.columns = ["metadata_isPostedOnBehalf", "postings"]
+        agency_data["metadata_isPostedOnBehalf"] = agency_data["metadata_isPostedOnBehalf"].map({True: "Agency", False: "Direct Employer"})
+        total_postings = agency_data["postings"].sum()
+        agency_data["percentage"] = (agency_data["postings"] / total_postings * 100).round(1)
 
+        chart = alt.Chart(agency_data).mark_bar().encode(
+            x=alt.X("metadata_isPostedOnBehalf", axis=alt.Axis(title="Posting Type")),
+            y=alt.Y("postings", axis=alt.Axis(title="Number of Postings")),
+            tooltip=["metadata_isPostedOnBehalf", "postings", "percentage"]
+        ).properties(width=700).interactive()
+
+        st.subheader("Postings by Posting Type (Global)")
+        st.altair_chart(chart)
+        st.dataframe(agency_data)
     #streamlit run dashboard.py (run in terminal to start the dashboard)
