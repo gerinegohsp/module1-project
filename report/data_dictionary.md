@@ -204,12 +204,3 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `posting_weekday` | INTEGER | YES | - | Day of week (0=Monday) |
 | `days_to_expiry` | INTEGER | YES | - | Job duration in days |
 | `posting_month_year` | TEXT | YES | - | Month/year grouping (YYYY-MM) |
-
-### Indexes
-
-```sql
-CREATE INDEX idx_industry ON jobs(industry_primary);
-CREATE INDEX idx_position_level ON jobs(position_level);
-CREATE INDEX idx_posting_date ON jobs(posting_date);
-CREATE INDEX idx_salary_band ON jobs(salary_band);
-CREATE INDEX idx_is_agency ON jobs(is_agency);
