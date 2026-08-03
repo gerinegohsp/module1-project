@@ -34,7 +34,7 @@ role = st.sidebar.text_input("Search for Role")
 chart_choice = st.sidebar.radio(
     "Choose question",
     ["Q1 Salary Benchmark","Q2 Hard-to-Fill Roles","Q3 Demand",
-     "Q4 Selective Hiring","Q5 Posting Trends","Q6 Agency Filter"]
+     "Q4 Posting Trends","Q5 Agency Filter"]
 )
 
 # --- Apply filters to dataset ---
@@ -178,68 +178,9 @@ elif chart_choice == "Q3 Demand":
         st.dataframe(demand_global)
 
 
-# --- Q4 Selective Hire by Industry ---
-elif chart_choice == "Q4 Selective Hire":
-    # Step 1: Create df_valid (same as EDA)
-    df_valid = df[
-        (df['metadata_totalNumberJobApplication'] > 0) | 
-        (df['metadata_repostCount'] > 0) |
-        (df['applications_per_vacancy'] > 0)
-    ].copy()
-
-    # Step 2: Calculate thresholds (25th and 75th percentiles)
-    low_reposts_threshold = df_valid['metadata_repostCount'].quantile(0.25)
-    high_apps_threshold = df_valid['applications_per_vacancy'].quantile(0.75)
-
-    # Step 3: Define selective hire condition
-    df_valid['is_selective_hire'] = (
-        (df_valid['metadata_repostCount'] <= low_reposts_threshold) &
-        (df_valid['applications_per_vacancy'] >= high_apps_threshold)
-    )
-
-    # --- Q4 Selective Hire by Industry ---
-elif chart_choice == "Q4 Selective Hire":
-    # Step 1: Create df_valid (same as EDA)
-    df_valid = df[
-        (df['metadata_totalNumberJobApplication'] > 0) | 
-        (df['metadata_repostCount'] > 0) |
-        (df['applications_per_vacancy'] > 0)
-    ].copy()
-
-    # Step 2: Calculate thresholds (25th and 75th percentiles)
-    low_reposts_threshold = df_valid['metadata_repostCount'].quantile(0.25)
-    high_apps_threshold = df_valid['applications_per_vacancy'].quantile(0.75)
-
-    # Step 3: Define selective hire condition
-    df_valid['is_selective_hire'] = (
-        (df_valid['metadata_repostCount'] <= low_reposts_threshold) &
-        (df_valid['applications_per_vacancy'] >= high_apps_threshold)
-    )
-
-   # --- Q4 Selective Hiring (aggregated by industry) ---
-elif chart_choice == "Q4 Selective Hiring":
-    scatter_data = df.groupby("industry_primary").agg({
-        "metadata_repostCount":"sum",
-        "applications_per_vacancy":"mean"
-    }).reset_index()
-
-    selective_hiring = scatter_data.sort_values(
-        ["metadata_repostCount","applications_per_vacancy"],
-        ascending=[True, False]
-    ).head(10)
-
-    st.subheader("Top 10 Selective Hiring Industries")
-    st.dataframe(selective_hiring[["industry_primary","metadata_repostCount","applications_per_vacancy"]])
-
-    q4_chart = alt.Chart(scatter_data).mark_circle(size=80).encode(
-        x=alt.X("metadata_repostCount", title="Total Reposts"),
-        y=alt.Y("applications_per_vacancy", title="Average Applications per Vacancy"),
-        tooltip=["industry_primary","metadata_repostCount","applications_per_vacancy"]
-    ).properties(title="Q4: Selective Hiring (Aggregated by Industry)", width=700).interactive()
-    st.altair_chart(q4_chart)
 
 
-elif chart_choice == "Q5 Posting Trends":
+elif chart_choice == "Q4 Posting Trends":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
     
     def create_separate_charts(data, title_prefix):
@@ -305,8 +246,8 @@ elif chart_choice == "Q5 Posting Trends":
         with col2:
             st.altair_chart(line)
 
-# --- Q6 Agency Filter (Filtered vs Global Tabs) ---
-elif chart_choice == "Q6 Agency Filter":
+# --- Q5 Agency Filter (Filtered vs Global Tabs) ---
+elif chart_choice == "Q5 Agency Filter":
     tab1, tab2 = st.tabs(["Filtered View", "Global View"])
 
     # --- Filtered View (Using Postings) ---
