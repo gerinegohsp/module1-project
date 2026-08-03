@@ -1,5 +1,6 @@
 SGJobData.csv
 db/*.csv
-**/.ipynb_checkpoints
+**/.ipynb_checkpoints/
 .DS_Store
-.vscode/settings.json
+**/.vscode/settings.json
+**/__MACOSX/
