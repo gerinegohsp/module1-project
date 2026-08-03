@@ -41,26 +41,28 @@ recruitment budget more effectively.
 
 ### Key Business Questions
 
-Each question maps to specific columns and one dashboard view. All six
+Each question maps to specific columns and one dashboard view. All five
 questions are implemented and selectable from the sidebar.
 
 | # | Business question | Key columns | Chart / view as built |
 |---|---|---|---|
-| Q1 | What salary should we offer for role X? | `positionLevels`, `average_salary`, `title` | Bar chart — median salary by position level; box plot — salary distribution by position level; free-text role search returns matching-job salary summary |
+| Q1 | What salary should we offer for role X? | `positionLevels`, `average_salary`, `title` | Bar chart — median salary by position level; box plot — salary distribution by position level; free-text role search returns a matching-job salary summary |
 | Q2 | Which roles are hard to fill? ⭐ | `metadata_repostCount`, `applications_per_vacancy` | Bar chart — Top 10 industries by % hard-to-fill; scatter plot — average reposts vs. average applications per vacancy, aggregated by industry |
 | Q3 | Which roles/industries have the most demand? | `title`, `numberOfVacancies` | Bar chart + data table — Top 20 roles by vacancies. **Filtered View / Global View tabs** |
-| Q4 | Where can we hire selectively? | `metadata_repostCount`, `applications_per_vacancy` | Data table — Top 10 selective-hiring industries; scatter plot — total reposts vs. average applications per vacancy, aggregated by industry |
-| Q5 | When should we post jobs? | `posting_month_year`, `applications_per_vacancy` | Line chart — postings & average applications over time. **Filtered View / Global View tabs** |
-| Q6 | Agency vs direct employer? | `metadata_isPostedOnBehalf` | Bar chart — vacancies by posting type. Also available as a global sidebar filter. **Filtered View / Global View tabs** |
+| Q4 | When should we post jobs? | `posting_month_year`, `applications_per_vacancy` | Two charts side by side — bar chart of monthly posting volume, line chart of average applications per vacancy. **Filtered View / Global View tabs** |
+| Q5 | Agency vs direct employer? | `metadata_isPostedOnBehalf` | Bar chart + table — postings by posting type, with percentage share. Also available as a global sidebar filter. **Filtered View / Global View tabs** |
+
+**A note on scope:** an earlier draft included a sixth question on where a
+team could hire selectively (low reposts, high applications). It was dropped
+during review because its features were engineered from the same columns as
+the hard-to-fill metric, making it largely a mirror image of Q2 rather than
+an independent finding.
 
 **Definitions used**
 
 - *Hard to fill* — reposts at or above the median **and** applications per
-  vacancy at or below the median, among postings with recorded activity.
-- *Selective hiring* — reposts in the bottom quartile **and** applications
-  per vacancy in the top quartile.
-- Both metrics are calculated on the subset of postings that have activity
-  data (applications, views, or reposts recorded).
+  vacancy at or below the median, calculated on the subset of postings that
+  have recorded activity (applications, views, or reposts).
 
 **Sidebar filters:** Industry · Year · Agency vs Direct · Search for Role
 
@@ -113,7 +115,7 @@ Full column reference: [`report/data_dictionary.md`](report/data_dictionary.md)
 | `industry_list` / `industry_primary` | str | Parsed from the raw `categories` JSON array. `industry_primary` is the first listed category and is what the dashboard filters on. |
 | `applications_per_vacancy` | float | `metadata_totalNumberJobApplication ÷ numberOfVacancies`. Core competition metric for Q2 and Q4. |
 | `salary_median` / `salary_range_width` / `salary_band` | int / str | Derived salary features. Bands: Entry, Mid, Senior, Lead, Executive. |
-| `is_hard_to_fill` / `is_selective_hire` | bool | Pre-computed classification flags. |
+| `is_hard_to_fill` / `is_selective_hire` | bool | Pre-computed classification flags. `is_selective_hire` remains in the dataset but is no longer used by the dashboard (see the note on scope above). |
 | `is_agency_post` | bool | Mirrors `metadata_isPostedOnBehalf`. |
 | `posting_year` / `posting_month` / `posting_quarter` / `posting_weekday` / `posting_month_year` | int / str | Date parts extracted for time-trend analysis. |
 | `days_to_expiry` | int | Days between posting and expiry. |
@@ -132,7 +134,7 @@ requirement for both an overview and a drill-down view.
 
 **Overview (Global View)** — headline patterns across the full 1M+ row
 dataset, unaffected by sidebar filters. Available as the *Global View* tab
-on Q3, Q5 and Q6.
+on Q3, Q4 and Q5.
 
 **Drill-down (Filtered View)** — the same analysis narrowed by the sidebar
 filters (industry, year, agency vs direct, role keyword), with five KPI
@@ -209,13 +211,6 @@ module1-project/
 ## 6. Setup & How to Run
 
 ### Prerequisites
-- `occupationId` is 100% null → will be dropped.
-- Salary outliers found (min $1, max $205,000/month vs. median $3,750) →
-  a justified filter range will be applied during cleaning.
-- `categories` is stored as a JSON string (multi-label) → needs parsing
-  before industry-level analysis.
-- Early months (Oct 2022 – Feb 2023) are sparse; volume stabilises from
-  ~May 2023 → time-trend views will note this. (please refer to the dashboard.py under employment trend)
 
 - Python 3.10
 - Conda (recommended) or pip
@@ -271,24 +266,38 @@ Open any notebook in `notebooks/` in VS Code or Jupyter and select the
 - `categories` is stored as a JSON string (multi-label) → parsed into
   `industry_list` and `industry_primary` before industry-level analysis.
 - Early months (Oct 2022 – Feb 2023) are sparse; volume stabilises from
-  ~May 2023 → time-trend views note this.
+  ~May 2023 → time-trend views note this (see the employment trend section
+  in `dashboard.py`).
 
 ---
 
 ## 8. Key Findings
 
-<!-- TODO: fill in 3-5 findings once Wei Xiang confirms the final numbers.
-     Candidates from full_eda.ipynb:
-     - Personal Care / Beauty has the highest hard-to-fill rate at 85%.
-     - Hard-to-fill roles receive 92.7% fewer applications than other roles,
-       despite paying only 4.8% more on average.
-     - Legal and Information Technology lead on median salary
-       (SGD 7,000 and 6,750 respectively).
-     - F&B leads on total vacancies (244,260), ahead of Customer Service
-       and Information Technology.
-     - Tuesday sees the most postings; Wednesday the best engagement. -->
+**Hard-to-fill roles are an attraction problem, not a pay problem.**
+Roles classified as hard to fill receive 92.7% fewer applications than other
+roles, yet pay only 4.8% more on average — suggesting salary alone is not
+what is holding these vacancies open.
 
----
+**Difficulty concentrates in specific industries.**
+Personal Care / Beauty has the highest hard-to-fill rate at 85%, followed by
+Entertainment and F&B at 75% each. Seniority matters less than expected:
+Professional (72%) and Fresh/entry level (71%) sit close together.
+
+**Demand and pay point to different sectors.**
+F&B leads on volume with 244,260 vacancies, while Legal (median SGD 7,000)
+and Information Technology (SGD 6,750) lead on salary — so a TA team
+optimising for headcount and one optimising for seniority should look in
+different places.
+
+**Timing has a measurable effect.**
+Tuesday sees the most postings (189,737) and Wednesday the strongest
+engagement (1.61 applications per posting), while weekends fall well below
+both. Volume peaks in August and bottoms out in December.
+
+**Agency postings are a small but distinct segment.**
+Agencies account for 5.9% of postings, pay SGD 132 less on average, and
+attract 0.74 applications per vacancy against 1.72 for direct employers —
+a gap worth noting when benchmarking against market data that mixes both.
 
 ## 9. Tools
 
