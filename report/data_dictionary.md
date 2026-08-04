@@ -121,9 +121,9 @@ These derived features are calculated during data preparation and stored in `SGJ
 | `positionLevels` | None. Already standardized. No missing value after dropping single row | TEXT |
 | `employmentTypes` | None. Already standardized. No missing value after dropping single row | TEXT |
 | `numberOfVacancies` | None | INTEGER |
-| `minimumYearsExperience` | None | INTEGER |
-| `salary_minimum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
-| `salary_maximum` | Filter to $500 - $25,000; drop rows outside range | INTEGER |
+| `minimumYearsExperience` | drop rows with value>40, 14 rows dropped  | INTEGER |
+| `salary_minimum` | None | INTEGER |
+| `salary_maximum` | Filter out high side outlier, 16 rows dropped | INTEGER |
 | `average_salary` | validated in explore.ipynb | INTEGER |
 | `metadata_totalNumberJobApplication` | None | INTEGER |
 | `metadata_totalNumberOfView` | None | INTEGER |

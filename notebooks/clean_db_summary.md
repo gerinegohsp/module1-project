@@ -8,7 +8,7 @@
 | df.shape | (1048585, 22) | - |
 | df.info | 'metadata_isPostedOnBehalf', 'metadata_newPostingDate', 'metadata_originalPostingDate' data type is str, should be date; 100% Null in 'occupationId'  | change datatype of 'metadata_isPostedOnBehalf', 'metadata_newPostingDate', 'metadata_originalPostingDate' to date; drop 'occupationId' |
 | df.describe() | 100% 0 value in 'status_id'; suspicious min/max in 'minimumYearsExperience', 'numberOfVacancies', 'salary_maximum', 'salary_minimum' | drop 'status_id'; further check value in 'minimumYearsExperience', 'numberOfVacancies', 'salary_maximum', 'salary_minimum' |
-| df.describe(include=['object']) | single value Monthly in 'salary_type' | drop 'salary_type' |
+| df.describe(include=['object']) | single value Monthly in 'salary_type'; the unique value count in CATEGORICAL column is <10 or >400 | drop 'salary_type' |
 | df[column].value_counts().head(10) | values in columns are standardized | - |
 | df.duplicated().sum() | 3987 duplicated row found | drop duplicated row |
 | df.isnull().sum() | 11 columns has missing value | recheck to decide drop or fill after drop duplicate rows and meaningless columns |
