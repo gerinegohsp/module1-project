@@ -86,5 +86,17 @@ df[date_cols] = df[date_cols].apply(pd.to_datetime)
 |---------|--------------|------|
 | draw boxplot of numberOfVacancies and minimumYearsExperience; list down the top 10 unique value and their count of numberOfVacancies and minimumYearsExperience | numberOfVacancies has outlier values, such as 999,998,900, 500...; minimumYearsExperience has value up to 80 | keep numberOfVacancies; drop rows w/ minimumYearsExperience >40 |
 
+## Step 8 - re-check the db after cleaning
 
-## Step 8 - Save the DB
+| Analysis | Finding | Action recorded |
+|---------|--------------|------|
+| df.head() | normal | - |
+| df.shape | (1044567, 32), 17 original columns + 15 calculated columns | - |
+| df.info | data type matches requirement  | - |
+| df.describe() | normal | - |
+| df.describe(include=['object']) | normal | - |
+| df.duplicated().sum() | no duplicate rows | - |
+| df.isnull().sum() | no missing value | - |
+
+
+## Step 9 - Save the DB
