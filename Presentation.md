@@ -45,9 +45,8 @@ Each question maps to specific columns and one dashboard view:
 | Q1 | What salary should we offer for role X? | title, categories, positionLevels, salary columns | Box plot by level/industry + median/P25/P75 metric cards, with filters |
 | Q2 | Which roles are hard to fill?  | metadata_repostCount, metadata_totalNumberJobApplication ÷ numberOfVacancies | Scatter plot (X = repost count, Y = applications per vacancy) — bottom-right quadrant = hard-to-fill |
 | Q3 | Which roles/industries have the most demand? | parsed categories, numberOfVacancies | Horizontal bar: Top 10 industries by vacancies; bar by position level |
-| Q4 | Where can we hire selectively? | same as Q2 | Same scatter, top-left quadrant (low repost, high applications) |
-| Q5 | When should we post jobs? | metadata_originalPostingDate (monthly) | Line chart: postings & avg applications over time (from May 2023; earlier months are sparse) |
-| Q6 | Agency vs direct employer?  | metadata_isPostedOnBehalf | Global filter toggle across all views |
+| Q4 | When should we post jobs? | metadata_originalPostingDate (monthly) | Line chart: postings & avg applications over time (from May 2023; earlier months are sparse) |
+| Q5 | Agency vs direct employer?  | metadata_isPostedOnBehalf | Global filter toggle across all views |
 
 ## 2. Data Handling & Process
 ### Dataset
