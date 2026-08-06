@@ -47,7 +47,7 @@ questions are implemented and selectable from the sidebar.
 | # | Business question | Key columns | Chart / view as built |
 |---|---|---|---|
 | Q1 | What salary should we offer for role X? | `positionLevels`, `average_salary`, `title` | Bar chart — median salary by position level; box plot — salary distribution by position level; free-text role search returns a matching-job salary summary |
-| Q2 | Which roles are hard to fill? ⭐ | `metadata_repostCount`, `applications_per_vacancy` | Bar chart — Top 10 industries by % hard-to-fill; scatter plot — average reposts vs. average applications per vacancy, aggregated by industry |
+| Q2 | Which roles are hard to fill? ⭐ | `metadata_repostCount`, `applications_per_vacancy` | Bar chart — Top 10 industries by % hard-to-fill; scatter plot — average reposts vs. average applications per vacancy. The scatter is deliberately drawn across **all industries regardless of the sidebar filters**, so the selected industry can be compared against the wider market at a glance |
 | Q3 | Which roles/industries have the most demand? | `title`, `numberOfVacancies` | Bar chart + data table — Top 20 roles by vacancies. **Filtered View / Global View tabs** |
 | Q4 | When should we post jobs? | `posting_month_year`, `applications_per_vacancy` | Two charts side by side — bar chart of monthly posting volume, line chart of average applications per vacancy. **Filtered View / Global View tabs** |
 | Q5 | Agency vs direct employer? | `metadata_isPostedOnBehalf` | Bar chart + table — postings by posting type, with percentage share. Also available as a global sidebar filter. **Filtered View / Global View tabs** |
@@ -74,7 +74,7 @@ same talent.
 
 - **Source:** Singapore job postings (MyCareersFuture), provided by instructor
 - **Raw size:** ~1,048,865 rows × 22 columns (~286 MB CSV)
-- **Cleaned size:** 1,044,597 rows × 32 columns (10 engineered features added)
+- **Cleaned size:** 1,044,567 rows × 32 columns (10 engineered features added)
 - **Period covered:** Oct 2022 – May 2024
 - **Note:** The raw CSV is **not** included in this repo (exceeds GitHub's
   100 MB limit) and its download link is **intentionally not published**
@@ -262,7 +262,10 @@ Open any notebook in `notebooks/` in VS Code or Jupyter and select the
 
 - `occupationId` is 100% null → dropped during cleaning.
 - Salary outliers found (min $1, max $205,000/month vs. median $3,750) →
-  flagged for a justified filter range during cleaning.
+  flagged for a justified filter range during cleaning. The final cleaning
+  pass removed 16 rows with extreme `salary_maximum` values and 14 rows with
+  `minimumYearsExperience` above 40, bringing the maximum recorded salary
+  down to SGD 400,000.
 - `categories` is stored as a JSON string (multi-label) → parsed into
   `industry_list` and `industry_primary` before industry-level analysis.
 - Early months (Oct 2022 – Feb 2023) are sparse; volume stabilises from
@@ -274,9 +277,11 @@ Open any notebook in `notebooks/` in VS Code or Jupyter and select the
 ## 8. Key Findings
 
 **Hard-to-fill roles are an attraction problem, not a pay problem.**
-Roles classified as hard to fill receive 92.7% fewer applications than other
-roles, yet pay only 4.8% more on average — suggesting salary alone is not
-what is holding these vacancies open.
+Roles classified as hard to fill receive 92.8% fewer applications than other
+roles, despite paying 10.6% more on average — so pay is not what is holding
+these vacancies open. Note that this gap only became visible after the final
+cleaning pass: with extreme salary outliers still in the data, the premium
+appeared to be just 4.8%.
 
 **Difficulty concentrates in specific industries.**
 Personal Care / Beauty has the highest hard-to-fill rate at 85%, followed by
@@ -284,7 +289,7 @@ Entertainment and F&B at 75% each. Seniority matters less than expected:
 Professional (72%) and Fresh/entry level (71%) sit close together.
 
 **Demand and pay point to different sectors.**
-F&B leads on volume with 244,260 vacancies, while Legal (median SGD 7,000)
+F&B leads on volume with 244,252 vacancies, while Legal (median SGD 7,000)
 and Information Technology (SGD 6,750) lead on salary — so a TA team
 optimising for headcount and one optimising for seniority should look in
 different places.
